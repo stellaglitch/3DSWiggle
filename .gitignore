@@ -1,0 +1,23 @@
+# build output (published as GitHub Release assets instead)
+build/
+*.elf
+*.smdh
+*.map
+*.3dsx
+*.cia
+
+# CIA packaging tools built by tools/build_cia_tools.sh
+tools/bin/
+
+# PC test binaries / output
+pc_test
+real_test
+*.exe
+*.565
+/test_*.gif
+/real_*.gif
+/mid_*.gif
+
+__pycache__/
+.vscode/
+.claude/

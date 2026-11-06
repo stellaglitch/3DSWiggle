@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3DSWiggle — wigglegram camera for 3DS</title>
+<meta name="description" content="3DSWiggle turns the Nintendo 3DS's two outer cameras into a wigglegram camera that saves looping GIFs.">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f3fb;
+    --surface: #ffffff;
+    --ink: #1d1830;
+    --muted: #5d5675;
+    --line: #e2dcef;
+    --accent: #6a3fd1;
+    --accent-ink: #ffffff;
+    --pop: #ffe36e;
+    --code-bg: #efeaf8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #16121f;
+      --surface: #201a2e;
+      --ink: #eeeaf7;
+      --muted: #a79fc0;
+      --line: #342b48;
+      --accent: #9d7bff;
+      --accent-ink: #120d1d;
+      --pop: #ffe36e;
+      --code-bg: #2a2240;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #16121f; --surface: #201a2e; --ink: #eeeaf7; --muted: #a79fc0;
+    --line: #342b48; --accent: #9d7bff; --accent-ink: #120d1d; --pop: #ffe36e; --code-bg: #2a2240;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.6 Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  a { color: var(--accent); }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 16px; }
+
+  header.hero {
+    background: linear-gradient(135deg, #30265f 0%, #5b2f8f 55%, #7a3fa6 100%);
+    color: #fff;
+    padding: 56px 0 48px;
+  }
+  .hero-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 36px; align-items: center; }
+  .hero h1 {
+    font-family: Silkscreen, monospace;
+    font-weight: 400;
+    font-size: clamp(40px, 7vw, 64px);
+    line-height: 1;
+    margin: 0 0 14px;
+    color: var(--pop);
+    text-shadow: 3px 3px 0 rgba(20, 10, 40, .55);
+  }
+  .hero p.lede { font-size: 18px; margin: 0 0 26px; color: #ece6ff; max-width: 34ch; }
+  .buttons { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn {
+    display: inline-block;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    border: 2px solid transparent;
+  }
+  .btn.primary { background: var(--pop); color: #241a3d; }
+  .btn.ghost { border-color: rgba(255,255,255,.55); color: #fff; }
+  .btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+  .demo {
+    margin: 0;
+    background: #0e0b16;
+    border-radius: 14px;
+    padding: 10px;
+    box-shadow: 0 18px 40px rgba(10, 5, 25, .45);
+  }
+  .demo img { display: block; width: 100%; height: auto; border-radius: 8px; image-rendering: auto; }
+  .demo figcaption { color: #b9b0d6; font-size: 13px; padding: 8px 4px 2px; }
+
+  main section { padding: 44px 0 8px; }
+  h2 { font-size: 26px; margin: 0 0 16px; }
+  h3 { font-size: 18px; margin: 26px 0 10px; }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .card .num {
+    font-family: Silkscreen, monospace;
+    color: var(--accent);
+    font-size: 22px;
+  }
+  .card h3 { margin: 6px 0 6px; }
+  .card p { margin: 0; color: var(--muted); }
+
+  table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  th { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); background: var(--code-bg); }
+  td:first-child { white-space: nowrap; font-weight: 600; width: 34%; }
+  .table-scroll { overflow-x: auto; }
+
+  ol.steps { padding-left: 22px; }
+  ol.steps li { margin-bottom: 8px; }
+  code, pre { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 14px; }
+  code { background: var(--code-bg); padding: 2px 6px; border-radius: 6px; }
+  pre { background: var(--code-bg); padding: 14px 16px; border-radius: 10px; overflow-x: auto; }
+  pre code { background: none; padding: 0; }
+  .note { color: var(--muted); font-size: 14px; }
+
+  footer { border-top: 1px solid var(--line); margin-top: 48px; padding: 22px 0 40px; color: var(--muted); font-size: 14px; }
+
+  @media (max-width: 760px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: 1fr; }
+    header.hero { padding: 40px 0 36px; }
+    td:first-child { white-space: normal; }
+  }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <h1>3DSWiggle</h1>
+      <p class="lede">A wigglegram camera for the Nintendo 3DS. Take a photo with the dual front cameras, select a focal point, and then save your wigglegram as a looping GIF!</p>
+      <div class="buttons">
+        <a class="btn primary" href="https://github.com/stellaglitch/3DSWiggle/releases/latest/download/3DSWiggle.cia">Download .cia</a>
+        <a class="btn ghost" href="https://github.com/stellaglitch/3DSWiggle/releases/latest/download/3DSWiggle.3dsx">Download .3dsx</a>
+        <a class="btn ghost" href="https://github.com/stellaglitch/3DSWiggle">Source on GitHub</a>
+      </div>
+    </div>
+    <figure class="demo">
+      <img src="demo.gif" width="378" height="240" alt="Example wigglegram: a textured scene with a red disc and green checkerboard rocking back and forth around the checkerboard.">
+      <figcaption>Example output from the app's built-in test scene: focal point on the checkerboard, 3 crossfade frames, 120 ms.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<main class="wrap">
+  <section>
+    <h2>How it works</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="num">01</div>
+        <h3>Shoot</h3>
+        <p>Both outer cameras shoot at the same instant, so your subject will stay still, while the scene moves around them. </p>
+      </div>
+      <div class="card">
+        <div class="num">02</div>
+        <h3>Pick the pivot</h3>
+        <p>Tap your subject with the touchscreen to set your focal point. The app auto-aligns the second photo on it. Fine-tune with the D-Pad, using the overlay view.</p>
+      </div>
+      <div class="card">
+        <div class="num">03</div>
+        <h3>Save your GIF</h3>
+        <p> Use the D-pad to adjust the speed of the wiggle, and add crossfade frames with the shoulder buttons. The A button saves the GIF to your SD card.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Install</h2>
+    <p>You need a 3DS, 2DS or New 3DS (any model with two outer cameras) running custom firmware.</p>
+    <ol class="steps">
+      <li><strong>CIA (recommended):</strong> download <code>3DSWiggle.cia</code> and copy it to your SD card. Open <strong>FBI</strong> → SD → <code>3DSWiggle.cia</code> → Install. 3DSWiggle appears on the HOME Menu.</li>
+      <li><strong>3DSX:</strong> download <code>3DSWiggle.3dsx</code>, copy it to <code>sd:/3ds/</code>, and launch it from the Homebrew Launcher.</li>
+    </ol>
+    <p class="note">GIFs are saved to <code>sd:/wigglegrams/WIG_0001.gif</code>, <code>WIG_0002.gif</code>, …</p>
+  </section>
+
+  <section>
+    <h2>Controls</h2>
+    <h3>Camera</h3>
+    <div class="table-scroll"><table>
+      <tr><th>Button</th><th>Action</th></tr>
+      <tr><td>A</td><td>Take the photo (both cameras)</td></tr>
+      <tr><td>SELECT</td><td>Live preview: Camera 1 / Camera 2 / Wiggle</td></tr>
+      <tr><td>Y</td><td>Gallery</td></tr>
+      <tr><td>START</td><td>Quit</td></tr>
+    </table></div>
+
+    <h3>Adjust &amp; save</h3>
+    <div class="table-scroll"><table>
+      <tr><th>Button</th><th>Action</th></tr>
+      <tr><td>Touch</td><td>Pick the focal point. The second photo auto-aligns so it stays fixed.</td></tr>
+      <tr><td>D-Pad</td><td>Fine-tune the alignment, 1 px at a time</td></tr>
+      <tr><td>Circle Pad ◀ ▶</td><td>Timing between the two photos: 40–500 ms in 10 ms steps</td></tr>
+      <tr><td>L / R</td><td>Crossfade frames between the photos (0 = classic two-frame wiggle). Up to 5 at 120 ms, up to 11 at 240 ms or more.</td></tr>
+      <tr><td>SELECT</td><td>View: Wiggle / Onion skin / Frame 1 / Frame 2</td></tr>
+      <tr><td>A</td><td>Save GIF</td></tr>
+      <tr><td>B</td><td>Retake</td></tr>
+    </table></div>
+
+    <h3>Gallery</h3>
+    <div class="table-scroll"><table>
+      <tr><th>Button</th><th>Action</th></tr>
+      <tr><td>D-Pad ◀ ▶ or L / R</td><td>Previous / next GIF (newest first)</td></tr>
+      <tr><td>X</td><td>Delete this GIF (A to confirm, B to cancel)</td></tr>
+      <tr><td>B</td><td>Back to the camera</td></tr>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Build from source</h2>
+    <p>The build runs in the official <code>devkitpro/devkitarm</code> container image, so you don't need a local devkitPro install. Use Linux or WSL with podman or docker.</p>
+<pre><code>git clone https://github.com/stellaglitch/3DSWiggle.git
+cd 3DSWiggle
+bash tools/build_cia_tools.sh   # one time: builds makerom + bannertool
+bash build.sh                   # -> 3DSWiggle.cia and 3DSWiggle.3dsx</code></pre>
+    <p class="note">See the <a href="https://github.com/stellaglitch/3DSWiggle#readme">README</a> for details and the PC test suite.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">3DSWiggle by <a href="https://github.com/stellaglitch">stellaglitch</a>, MIT licensed. Unofficial homebrew software, not affiliated with or endorsed by Nintendo.</div>
+</footer>
+</body>
+</html>
