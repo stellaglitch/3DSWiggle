@@ -1,14 +1,9 @@
 # 3DSWiggle — wigglegram camera for Nintendo 3DS
 
-Takes a photo with **both outer cameras at the same instant**, lets you pick the
-focal point that stays still, and saves a looping GIF to
-`sd:/wigglegrams/WIG_0001.gif`, `WIG_0002.gif`, …
-
-The loop goes frame 1 → frame 2 → frame 1 → … with **120 ms** (adjustable) between
-the two real photos. Optional crossfade frames between them soften the jump.
-They split that time, so the wiggle speed stays the same. Every GIF frame lasts
-at least 20 ms, because many viewers play faster frames slowly. That's why longer
-timings allow more crossfade frames.
+Takes a photo with both outer cameras at the same time,  lets you pick the
+focal point between the two, and then saves that as a "wigglegram"!
+The GIF loops between frame 1 and frame 2, with an adjustable **120 ms** delay between
+the two photos. You can also add crossfade frames between them to make it look smoother.
 
 ## Controls
 
