@@ -1,4 +1,4 @@
-# 3DSWiggle — Wigglegram camera for the Nintendo 3DS/N3DS/2DS
+# 3DSWiggle — Wigglegram camera for the Nintendo 3DS
 
 Takes a photo with both outer cameras at the same time,  lets you pick the
 focal point between the two, and then saves that as a "wigglegram"!
